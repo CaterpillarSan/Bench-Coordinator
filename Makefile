@@ -1,5 +1,5 @@
 NODE_ID = 1
-PORT = $(shell expr $(NODE_ID) + 5000)
+PORT = $(shell expr $(NODE_ID) + 50000)
 
 RAITO_LINE = 15
 RAITO = 4
@@ -29,12 +29,14 @@ trace-bench:
 	make -C MapReduceTracer trace-bench
 	mv MapReduceTracer/output/Benchmark.jar JarCollection/
 
+
 pocketracer:
 	cp Benchmark/out/jar/Benchmark.jar PocketRacer/input/
 	make -C PocketRacer create-jar
 	mv PocketRacer/output/Benchmark.jar JarCollection/
 
 run-bench:
+	cd JarCollection && jar xf Benchmark.jar 
 	java -classpath $(CP) benchmark.Master $(PORT) $(THREAD_NUM) $(EVENT_NUM) $(RMI_IP)\
 		> $(TRACE_OUTPUT)/$(NODE_ID).log
 
