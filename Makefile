@@ -17,15 +17,12 @@ config:
 
 dcatch-setup: rmi-on compile-bench trace-bench
 
-pocket-setup: compile-bench pocketracer
+pocket-setup: rmi-on compile-bench pocketracer
 
 rmi-on:
-	make -C MapReduceTracer rmi-on
+	cd JarCollection && nohup rmiregistry &
 
 compile-bench:
-	make -C PocketRacer create-jar
-	cp PocketRacer/output/PocketRacerImpl.jar Benchmark/lib/
-	cp PocketRacer/output/PocketRacerImpl.jar JarCollection/
 	make -C Benchmark create-jar
 
 trace-bench:
@@ -34,7 +31,7 @@ trace-bench:
 
 pocketracer:
 	cp Benchmark/out/jar/Benchmark.jar PocketRacer/input/
-	make -C PocketRacer run-impl
+	make -C PocketRacer create-jar
 	mv PocketRacer/output/Benchmark.jar JarCollection/
 
 run-bench:
@@ -53,8 +50,7 @@ dcatch:
 	make -C DCatch-DAG run
 	
 rmi-off:
-	make -C MapReduceTrace rmi-off
-
+	-pkill rmiregistry
 
 view-graph:
 	make -C DCatch-DAG view-graph
