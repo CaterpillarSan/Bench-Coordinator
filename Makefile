@@ -15,9 +15,9 @@ CP = ./JarCollection/Benchmark.jar:./JarCollection/PocketRacerImpl.jar
 config:
 	@echo PORT:$(PORT) THREAD:$(THREAD_NUM) EVENT:$(EVENT_NUM)
 
-dcatch-setup: rmi-on compile-bench trace-bench
+dcatch-setup: rmi-off rmi-on compile-bench trace-bench
 
-pocket-setup: rmi-on compile-bench pocketracer
+pocket-setup: rmi-off rmi-on compile-bench pocketracer
 
 rmi-on:
 	cd JarCollection && nohup rmiregistry &
