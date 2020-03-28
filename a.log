@@ -1,0 +1,11 @@
+make -C PocketRacer impl-mr
+make create-jar TARGET_JAR_NAME=hadoop-core-2.0.0-mr1-cdh4.0.0.jar
+javac -sourcepath src -d ./tmp src/pocketracerimpl/*.java src/pocketracerimpl/*/*.java
+javac -cp ./libs/javassist.jar -sourcepath src -d ./bin\
+	 src/pocketracer/*.java\
+	 src/pocketracer/*/*.java\
+	  src/pocketracer/instrument/expr/*.java
+java -cp ./bin:./libs/javassist.jar:./tmp pocketracer.Main hadoop-core-2.0.0-mr1-cdh4.0.0.jar ./tmp
+input/hadoop-core-2.0.0-mr1-cdh4.0.0.jar
+TARGET:input/input/hadoop-core-2.0.0-mr1-cdh4.0.0.jar, OUTPUT: ./tmp
+[36m0. Override K_Thread[00m

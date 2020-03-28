@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Benchmark" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/DCatch-DAG" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/MapReduceTracer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/PocketRacer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/PocketSim" vcs="Git" />
+  </component>
+</project>

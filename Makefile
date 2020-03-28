@@ -10,7 +10,12 @@ EVENT_NUM = 20
 RMI_IP = $(shell ipconfig getifaddr en0)
 TRACE_OUTPUT = DCatch-DAG/input
 
-CP = ./JarCollection/Benchmark.jar:./JarCollection/PocketRacerImpl.jar
+TARGET = Benchmark.jar
+MR = hadoop-core-2.0.0-mr1-cdh4.0.0.jar
+
+CP = ./JarCollection/$(TARGET):./JarCollection/PocketRacerImpl.jar
+
+SSH_TARGET = M0
 
 config:
 	@echo PORT:$(PORT) THREAD:$(THREAD_NUM) EVENT:$(EVENT_NUM)
@@ -18,6 +23,13 @@ config:
 dcatch-setup: rmi-off rmi-on compile-bench trace-bench
 
 pocket-setup: rmi-off rmi-on compile-bench pocketracer
+
+dcatch-mapreduce: trace-mapreduce send-remote
+
+pocket-mapreduce: 
+	make -C PocketRacer impl-mr
+	make send-remote
+
 
 rmi-on:
 	cd JarCollection && nohup rmiregistry &
@@ -27,16 +39,19 @@ compile-bench:
 
 trace-bench:
 	make -C MapReduceTracer trace-bench
-	mv MapReduceTracer/output/Benchmark.jar JarCollection/
+	mv MapReduceTracer/output/$(TARGET) JarCollection/
 
+trace-mapreduce:
+	make -C MapReduceTracer trace-mr
+	mv MapReduceTracer/output/$(MR) JarCollection/
 
-pocketracer:
-	cp Benchmark/out/jar/Benchmark.jar PocketRacer/input/
-	make -C PocketRacer create-jar
-	mv PocketRacer/output/Benchmark.jar JarCollection/
+pocket-bench:
+	cp Benchmark/out/jar/$(TARGET) PocketRacer/input/
+	make -C PocketRacer impl-bench
+	mv PocketRacer/output/$(TARGET) JarCollection/
 
 run-bench:
-	cd JarCollection && jar xf Benchmark.jar 
+	cd JarCollection && jar xf $(TARGET) 
 	java -classpath $(CP) benchmark.Master $(PORT) $(THREAD_NUM) $(EVENT_NUM) $(RMI_IP)\
 		> $(TRACE_OUTPUT)/$(NODE_ID).log
 
@@ -50,6 +65,10 @@ run-bench-pocketracer:
 dcatch:
 	make -C DCatch-DAG convert-log
 	make -C DCatch-DAG run
+
+send-remote:
+	mv JarCollection/$(MR) sendfiles
+	rsync -av -e ssh sendfiles $(SSH_TARGET):.
 	
 rmi-off:
 	-pkill rmiregistry
